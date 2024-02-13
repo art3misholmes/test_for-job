@@ -27,26 +27,22 @@ def total_cost(number_of_drivers, total_number_of_driven_minutes):
 
 # Read in file info and return the points in a dictionary 
 def read_file(file):
-
-    # Create an empty dictinary to hold id, pick up cordinate, and drop off cordinate
+    
     points_dictionary = {}
     
-    # Iterate through each line in the file
     for line in file:
-
-        # Remove leading and trailing whitespaces from the line
         line = line.strip()
-
-        # Check if the line is not empty
         if line:
-
             # Split the line into load number, pickup, and dropoff using whitespace as separator
-            load_number, pickup, dropoff = map(str.strip, line.split())
+            load_info = list(map(str.strip, line.split()))
 
-            # Add the load information to the points dictionary
-            points_dictionary[load_number] = {'pickup': pickup, 'dropoff': dropoff}
+            # Check if there are at least three values in load_info
+            if len(load_info) >= 3:
+                load_number, pickup, dropoff = load_info[:3]
+                points_dictionary[load_number] = {'pickup': pickup, 'dropoff': dropoff}
+            else:
+                print(f"Skipping invalid line: {line}")
 
-    # Return the filled dictinary with alll the information from the file
     return points_dictionary
 
 # Calculate the total distance between each start and end point for each load ID
@@ -183,12 +179,23 @@ def main():
     # Retrieve the file path from the command-line arguments
     file_path = sys.argv[1]
 
-    # Solve the Vehicle Routing Problem (VRP) using the provided file path
-    drivers_schedule = VRP(file_path)
+    try:
 
-    # Iterate through each schedule_per_driver in the list of driver schedules
-    for schedule_per_driver in drivers_schedule:
+        # Open the file in read mode
+        with open(file_path, 'r') as file:
 
-        # Print the schedule for each driver
-        print(schedule_per_driver)
+            # Solve the Vehicle Routing Problem (VRP) using the provided file path
+            drivers_schedule = VRP(file)
 
+            # Iterate through each schedule_per_driver in the list of driver schedules
+            for schedule_per_driver in drivers_schedule:
+
+                # Print the schedule for each driver
+                print(schedule_per_driver)
+
+    except FileNotFoundError:
+
+        # Print an error message if the file is not found
+        print(f"Error: File '{file_path}' not found.")
+
+main()
