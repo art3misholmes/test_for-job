@@ -14,4 +14,15 @@ def total_cost(number_of_drivers, total_number_of_driven_minutes):
     result = 500 * number_of_drivers + total_number_of_driven_minutes
     return result
 
-# Read in file info from command line argument
+# Read in file info and return the points in a dictinary 
+def read_file(file):
+    points_dictionary = {}
+    
+    for line in file:
+        line = line.strip()
+        if line:
+            load_number, pickup, dropoff = map(str.strip, line.split())
+            points_dictionary[load_number] = {pickup, dropoff}
+    
+    return points_dictionary
+
