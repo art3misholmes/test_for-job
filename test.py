@@ -26,3 +26,16 @@ def read_file(file):
     
     return points_dictionary
 
+# Calculate the total distance between each start and end point for each load ID
+def distance_per_load(dictionary):
+    load_distance = {}
+
+    for load_id, points in dictionary.items():
+        start_point = points['pickup']
+        end_point = points['dropoff']
+        distance = euclidean_distance(start_point, end_point)
+        load_distance[load_id] = distance
+
+    return load_distance
+
+# 
